@@ -127,9 +127,12 @@ else:
 
     # Apply weather DC modifier to survival check
     final_surv_dc = surv_dc.total
+    surv_mod = character().skills.survival.value
+    equalizer = surv_mod - 2 if surv_mod > 5 else surv_mod
+    base_dc = final_surv_dc + equalizer
     if typeof(weather_info) == 'str':
         weather_info = load_json(weather_info)
-    final_surv_dc += weather_info['total_dc_mod']
+    final_surv_dc = base_dc + weather_info['total_dc_mod']
 
     char.set_cvar('last_fish', time())
     args = argparse(arg_list)
@@ -155,7 +158,7 @@ Weather change: <t:{next_weather_update}:R>
 Event change: <t:{next_event_update}:R>
 
 **__DC Determination__**:
-{surv_dc} [Base DC] {main_dc_mod:+d} [Weather] {sub_dc_mod:+d} [Event] = DC`{final_surv_dc}`
+{base_dc} [Base DC] {main_dc_mod:+d} [Weather] {sub_dc_mod:+d} [Event] = DC`{final_surv_dc}`
     """
 
     weather_change_desc = ''
