@@ -77,7 +77,7 @@ def notify_no_starry_dragon_char():
     return f'embed -title "{title}" -desc "{desc}" -thumb {image} -footer "{footer}" -color red'
 
 
-if 'setup' in inp1.casefold():
+if 'setup' in argparse(arg_list):
     title = 'Server Customization Options'
     image = ''
     desc = get_gvar('b38466dc-ff6e-4a81-8a17-f880d99e7dbe')
@@ -87,7 +87,7 @@ elif diff < cooldown:
     desc = f'Please wait for them to re-assemble!\nThe waters will calm down <t:{int(time()) + time_left}:R>\n\n_(You could RP your current catch until then)_'
 else:
     auto_item = dragon_active = starry_desc = False
-    if 'sea' in inp1.casefold():
+    if 'sea' in argparse(arg_list):
         fish_table = load_json(get_gvar("ea4caa26-9c39-4925-b076-ab64d6cfa093"))
     else:
         fish_table = load_json(get_gvar("428660f4-cd5d-4a02-b7d2-3f0139550b2e"))
@@ -95,14 +95,14 @@ else:
     surv_dc = vroll("d18mi3")
     
     # Check if the input or the current state indicates Starry Form: Dragon
-    starry_dragon = ieffect_active_starry_form_dragon() or 'dragon' in inp1.casefold()
+    starry_dragon = ieffect_active_starry_form_dragon() or 'dragon' in argparse(arg_list)
 
     if starry_dragon:
         if not has_starry_form_dragon():
             return notify_no_starry_dragon_char()
 
     if has_starry_form_dragon():
-        force_activate = 'dragon' in inp1.casefold()
+        force_activate = 'dragon' in argparse(arg_list)
         remaining_time, newly_activated = manage_starry_form_dragon(force_activate)
         if remaining_time is not None:
             arg_list.extend(['-mc', '10'])
