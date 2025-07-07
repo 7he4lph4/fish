@@ -194,17 +194,21 @@ else:
             else:
                 err(f':warning: __Requires Server Admin Attention:__\nThe `fishTrinketLoot` svar  contains an invalid gvar address. Please rectify it or use `{pref}svar fishTrinketLoot default` to go back to the default trinket loot list or `{pref}svar fishTrinketLoot disabled` to disable the trinket loot option.')
         
-        # Handle specific item selection if forceloot has a number
         if forceloot_num is not None:
-            # forceloot_num has been adjusted if needed, original_num has the user's input
+            # Scenario 1: Specific item number requested via -forceloot N
             rl = ta[forceloot_num - 1]  # Convert to 0-based index
             rl = rl[0].lower() + rl[1:]
             desc = f'{found} {rl}\n\n_-# Selected item #{original_num} from the trinket list.\n-# See `{cmd} setup` to configure_'
-        else:
-            # Random selection if no number specified
+        elif forceloot_active:
+            # Scenario 2: -forceloot flag used without specific number (random forced)
             rl = randchoice(ta)
             rl = rl[0].lower() + rl[1:]
             desc = f'{found} {rl}\n\n_-# Forced trinket loot, randomly selected.\n-# See `{cmd} setup` to configure_'
+        else:
+            # Scenario 3: Natural trinket roll (dice < 4), no forceloot flag
+            rl = randchoice(ta)
+            rl = rl[0].lower() + rl[1:]
+            desc = f'{found} {rl}'
         
         char.set_cvar('last_fish', time())
     elif forceloot_active and trinket_loot in 'disabled':
